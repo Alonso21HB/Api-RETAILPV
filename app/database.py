@@ -5,7 +5,8 @@ import mysql.connector
 
 # Conexión a SQL Server con autenticación de Windows
 SQLALCHEMY_DATABASE_URL = (
-    "mssql+pyodbc://ALONSO/Devioz_bd?driver=ODBC+Driver+17+for+SQL+Server"
+    #"mssql+pyodbc://ALONSO/Devioz_bd?driver=ODBC+Driver+17+for+SQL+Server"
+    "mssql+pyodbc://localhost/Devioz_bd?driver=ODBC+Driver+17+for+SQL+Server"
 )
 # Crear el motor
 engine = create_engine(
