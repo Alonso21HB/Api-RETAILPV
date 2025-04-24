@@ -1,30 +1,23 @@
 from pydantic import BaseModel
 from typing import Optional
-import uuid
 from datetime import date
 
 # -------------------- Esquema para la tabla pract_03_Data_clientes --------------------
-class ClienteCreate(BaseModel):
+class Cliente(BaseModel):
     id_cliente: Optional[int]  # El cliente puede enviar el ID (opcional)
     nombre: str
     apellido: str
     email: str
     telefono: str
     direccion: str
-    fecha_registro: Optional[str] = None  # Fecha opcional
-
-    class Config:
-        orm_mode = True
-
-class Cliente(ClienteCreate):
-    id_cliente: int  # Este campo solo se incluirá en la respuesta
+    fecha_registro: date  # Fecha opcional
 
     class Config:
         orm_mode = True
 
 
 # -------------------- Esquema para la tabla pract_03_Data_productos --------------------
-class ProductoCreate(BaseModel):
+class Producto(BaseModel):
     id_producto: Optional[int]  # El cliente puede enviar el ID (opcional)
     nombre: str
     id_categoria: int
@@ -32,21 +25,16 @@ class ProductoCreate(BaseModel):
     precio: float
     stock: int
     id_proveedor: int
+    fechaingreso: date
     tamano: str
     SKU: str
 
     class Config:
         orm_mode = True
 
-class Producto(ProductoCreate):
-    id_producto: int  # Este campo solo se incluirá en la respuesta
-
-    class Config:
-        orm_mode = True
-
 
 # -------------------- Esquema para la tabla pract_03_Data_sucursales --------------------
-class SucursalCreate(BaseModel):
+class Sucursal(BaseModel):
     id_sucursal: Optional[int]  # El cliente puede enviar el ID (opcional)
     nombre: str
     direccion: str
@@ -56,32 +44,20 @@ class SucursalCreate(BaseModel):
     class Config:
         orm_mode = True
 
-class Sucursal(SucursalCreate):
-    id_sucursal: int  # Este campo solo se incluirá en la respuesta
-
-    class Config:
-        orm_mode = True
-
 
 # -------------------- Esquema para la tabla pract_03_Data_pago --------------------
-class PagoCreate(BaseModel):
+class Pago(BaseModel):
     id_pago: Optional[int]  # El cliente puede enviar el ID (opcional)
     metodo: str
     monto: float
-    fecha_pago: str
-
-    class Config:
-        orm_mode = True
-
-class Pago(PagoCreate):
-    id_pago: int  # Este campo solo se incluirá en la respuesta
+    fecha_pago: date
 
     class Config:
         orm_mode = True
 
 
 # -------------------- Esquema para la tabla pract_03_Data_promociones --------------------
-class PromocionCreate(BaseModel):
+class Promocion(BaseModel):
     id_promocion: Optional[int]  # El cliente puede enviar el ID (opcional)
     descripcion: str
     descuento: float
@@ -89,15 +65,9 @@ class PromocionCreate(BaseModel):
     class Config:
         orm_mode = True
 
-class Promocion(PromocionCreate):
-    id_promocion: int  # Este campo solo se incluirá en la respuesta
-
-    class Config:
-        orm_mode = True
-
 
 # -------------------- Esquema para la tabla pract_03_Data_proveedores --------------------
-class ProveedorCreate(BaseModel):
+class Proveedor(BaseModel):
     id_proveedor: Optional[int]  # El cliente puede enviar el ID (opcional)
     nombre: str
     contacto: str
@@ -107,17 +77,11 @@ class ProveedorCreate(BaseModel):
     class Config:
         orm_mode = True
 
-class Proveedor(ProveedorCreate):
-    id_proveedor: int  # Este campo solo se incluirá en la respuesta
-
-    class Config:
-        orm_mode = True
-
 
 # -------------------- Esquema para la tabla pract_03_Data_tiempo --------------------
-class TiempoCreate(BaseModel):
+class Tiempo(BaseModel):
     id_tiempo: Optional[int]  # El cliente puede enviar el ID (opcional)
-    fecha: str
+    fecha: date
     anio: int
     mes: int
     dia: int
@@ -126,15 +90,9 @@ class TiempoCreate(BaseModel):
     class Config:
         orm_mode = True
 
-class Tiempo(TiempoCreate):
-    id_tiempo: int  # Este campo solo se incluirá en la respuesta
-
-    class Config:
-        orm_mode = True
-
 
 # -------------------- Esquema para la tabla pract_03_Data_hechos_ventas --------------------
-class HechosVentasCreate(BaseModel):
+class HechosVentas(BaseModel):
     id_venta: Optional[int]  # El cliente puede enviar el ID (opcional)
     id_tiempo: int
     id_cliente: int
@@ -150,15 +108,9 @@ class HechosVentasCreate(BaseModel):
     class Config:
         orm_mode = True
 
-class HechosVentas(HechosVentasCreate):
-    id_venta: int  # Este campo solo se incluirá en la respuesta
-
-    class Config:
-        orm_mode = True
-
 
 # -------------------- Esquema para la tabla pract_03_Data_categoria --------------------
-class CategoriaCreate(BaseModel):
+class Categoria(BaseModel):
     id_categoria: Optional[int]  # El cliente puede enviar el ID (opcional)
     nombre: str
     descripcion_categoria: Optional[str] = None  # Descripción opcional
@@ -166,32 +118,17 @@ class CategoriaCreate(BaseModel):
     class Config:
         orm_mode = True
 
-class Categoria(CategoriaCreate):
-    id_categoria: int  # Este campo solo se incluirá en la respuesta
-
-    class Config:
-        orm_mode = True
-
 
 # -------------------- Esquema para la tabla pract_03_Data_empleados --------------------
-class EmpleadoCreate(BaseModel):
+class Empleado(BaseModel):
     id_empleado: Optional[int]  # El cliente puede enviar el ID (opcional)
     nombre: str
     apellido: str
     puesto: str
     salario: float
     id_sucursal: int
-    fecha_contratacion: str
+    fecha_contratacion: date
 
     class Config:
         orm_mode = True
 
-class Empleado(EmpleadoCreate):
-    id_empleado: int  # Este campo solo se incluirá en la respuesta
-
-    class Config:
-        orm_mode = True
-
-# -------------------- Función para generar un ID (si es necesario) --------------------
-def generate_cliente_id():
-    return uuid.uuid4()  # Si se desea generar un UUID para el ID
