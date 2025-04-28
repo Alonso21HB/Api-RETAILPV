@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: api-retailpv
+    env: docker
+    dockerfilePath: ./Dockerfile  # Asegúrate de que el Dockerfile esté en la raíz del proyecto o ajusta la ruta
+    buildCommand: "pip install --no-cache-dir -r requirements.txt"
+    startCommand: "uvicorn main:app --host 0.0.0.0 --port 8000"
+    plan: free  # Puedes cambiar esto a "starter", "pro", según el plan que prefieras
+    envVars:
+      - key: DATABASE_URL
+        value: your_database_url  # Si necesitas configurar variables de entorno (como la URL de la base de datos)
