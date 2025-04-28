@@ -103,7 +103,7 @@ class Tiempo(Base):
 
 # Tabla: pract_03_Data_Hechos_ventas
 class Venta(Base):
-    __tablename__ = "pract_03_Data_Hechos_ventas"
+    __tablename__ = "pract_03_Hechos_ventas"
     id_venta = Column(Integer, primary_key=True, index=True)
     id_tiempo = Column(Integer, ForeignKey('pract_03_Data_tiempo.id_tiempo'))
     id_cliente = Column(Integer, ForeignKey('pract_03_Data_clientes.id_cliente'))

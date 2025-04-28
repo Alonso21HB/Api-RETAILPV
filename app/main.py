@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-import crud, schemas  # Importar el CRUD y los esquemas de datos
+import crud, schemas, models  # Importar el CRUD y los esquemas de datos
 from database import get_db, get_db_mysql  # Funciones para obtener las sesiones de las bases de datos
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -111,16 +111,16 @@ def sincronizar_datos(
     try:
         # Lógica para sincronizar los datos
         tablas = [
-            {"modelo": schemas.Cliente, "nombre": "Cliente"},
-            {"modelo": schemas.Producto, "nombre": "Producto"},
-            {"modelo": schemas.Sucursal, "nombre": "Sucursal"},
-            {"modelo": schemas.Pago, "nombre": "Pago"},
-            {"modelo": schemas.Promocion, "nombre": "Promocion"},
-            {"modelo": schemas.Proveedor, "nombre": "Proveedor"},
-            {"modelo": schemas.Tiempo, "nombre": "Tiempo"},
-            {"modelo": schemas.HechosVentas, "nombre": "HechosVentas"},
-            {"modelo": schemas.Categoria, "nombre": "Categoria"},
-            {"modelo": schemas.Empleado, "nombre": "Empleado"}
+            {"modelo": models.Cliente, "nombre": "Cliente"},
+            {"modelo": models.Producto, "nombre": "Producto"},
+            {"modelo": models.Sucursal, "nombre": "Sucursal"},
+            {"modelo": models.Pago, "nombre": "Pago"},
+            {"modelo": models.Promocion, "nombre": "Promocion"},
+            {"modelo": models.Proveedor, "nombre": "Proveedor"},
+            {"modelo": models.Tiempo, "nombre": "Tiempo"},
+            {"modelo": models.Venta, "nombre": "HechosVentas"},
+            {"modelo": models.Categoria, "nombre": "Categoria"},
+            {"modelo": models.Empleado, "nombre": "Empleado"}
         ]
 
         resultados = {}
