@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 import crud, schemas, models  # Importar el CRUD y los esquemas de datos
-from database import get_db, get_db_mysql  # Funciones para obtener las sesiones de las bases de datos
+from database import get_db_mysql_local, get_db_mysql_hostinger  # Funciones para obtener las sesiones de las bases de datos
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
@@ -12,7 +12,7 @@ app = FastAPI()
 
 # Ruta para obtener clientes
 @app.get("/clientes/", response_model=List[schemas.Cliente])
-def get_clientes(db: Session = Depends(get_db)):
+def get_clientes(db: Session = Depends(get_db_mysql_local)):
     try:
         clientes = crud.get_clientes(db=db)
         return JSONResponse(content=jsonable_encoder(clientes), media_type="application/json; charset=utf-8")
@@ -21,7 +21,7 @@ def get_clientes(db: Session = Depends(get_db)):
 
 # Ruta para obtener productos
 @app.get("/productos/", response_model=List[schemas.Producto])
-def get_productos(db: Session = Depends(get_db)):
+def get_productos(db: Session = Depends(get_db_mysql_local)):
     try:
         productos = crud.get_productos(db=db)
         return JSONResponse(content=jsonable_encoder(productos), media_type="application/json; charset=utf-8")
@@ -30,7 +30,7 @@ def get_productos(db: Session = Depends(get_db)):
 
 # Ruta para obtener sucursales
 @app.get("/sucursales/", response_model=List[schemas.Sucursal])
-def get_sucursales(db: Session = Depends(get_db)):
+def get_sucursales(db: Session = Depends(get_db_mysql_local)):
     try:
         sucursales = crud.get_sucursales(db=db)
         return JSONResponse(content=jsonable_encoder(sucursales), media_type="application/json; charset=utf-8")
@@ -39,7 +39,7 @@ def get_sucursales(db: Session = Depends(get_db)):
 
 # Ruta para obtener pagos
 @app.get("/pagos/", response_model=List[schemas.Pago])
-def get_pagos(db: Session = Depends(get_db)):
+def get_pagos(db: Session = Depends(get_db_mysql_local)):
     try:
         pagos = crud.get_pagos(db=db)
         return JSONResponse(content=jsonable_encoder(pagos), media_type="application/json; charset=utf-8")
@@ -48,7 +48,7 @@ def get_pagos(db: Session = Depends(get_db)):
 
 # Ruta para obtener promociones
 @app.get("/promociones/", response_model=List[schemas.Promocion])
-def get_promociones(db: Session = Depends(get_db)):
+def get_promociones(db: Session = Depends(get_db_mysql_local)):
     try:
         promociones = crud.get_promociones(db=db)
         return JSONResponse(content=jsonable_encoder(promociones), media_type="application/json; charset=utf-8")
@@ -57,7 +57,7 @@ def get_promociones(db: Session = Depends(get_db)):
 
 # Ruta para obtener proveedores
 @app.get("/proveedores/", response_model=List[schemas.Proveedor])
-def get_proveedores(db: Session = Depends(get_db)):
+def get_proveedores(db: Session = Depends(get_db_mysql_local)):
     try:
         proveedores = crud.get_proveedores(db=db)
         return JSONResponse(content=jsonable_encoder(proveedores), media_type="application/json; charset=utf-8")
@@ -66,7 +66,7 @@ def get_proveedores(db: Session = Depends(get_db)):
 
 # Ruta para obtener tiempos
 @app.get("/tiempos/", response_model=List[schemas.Tiempo])
-def get_tiempos(db: Session = Depends(get_db)):
+def get_tiempos(db: Session = Depends(get_db_mysql_local)):
     try:
         tiempos = crud.get_tiempos(db=db)
         return JSONResponse(content=jsonable_encoder(tiempos), media_type="application/json; charset=utf-8")
@@ -75,7 +75,7 @@ def get_tiempos(db: Session = Depends(get_db)):
 
 # Ruta para obtener hechos de ventas
 @app.get("/hechos_ventas/", response_model=List[schemas.HechosVentas])
-def get_hechos_ventas(db: Session = Depends(get_db)):
+def get_hechos_ventas(db: Session = Depends(get_db_mysql_local)):
     try:
         hechos_ventas = crud.get_hechos_ventas(db=db)
         return JSONResponse(content=jsonable_encoder(hechos_ventas), media_type="application/json; charset=utf-8")
@@ -84,7 +84,7 @@ def get_hechos_ventas(db: Session = Depends(get_db)):
 
 # Ruta para obtener categorías
 @app.get("/categorias/", response_model=List[schemas.Categoria])
-def get_categorias(db: Session = Depends(get_db)):
+def get_categorias(db: Session = Depends(get_db_mysql_local)):
     try:
         categorias = crud.get_categorias(db=db)
         return JSONResponse(content=jsonable_encoder(categorias), media_type="application/json; charset=utf-8")
@@ -93,7 +93,7 @@ def get_categorias(db: Session = Depends(get_db)):
 
 # Ruta para obtener empleados
 @app.get("/empleados/", response_model=List[schemas.Empleado])
-def get_empleados(db: Session = Depends(get_db)):
+def get_empleados(db: Session = Depends(get_db_mysql_local)):
     try:
         empleados = crud.get_empleados(db=db)
         return JSONResponse(content=jsonable_encoder(empleados), media_type="application/json; charset=utf-8")
@@ -105,8 +105,8 @@ def get_empleados(db: Session = Depends(get_db)):
 
 @app.post("/sincronizar")
 def sincronizar_datos(
-    db_local: Session = Depends(get_db),
-    db_remoto: Session = Depends(get_db_mysql)
+    db_local: Session = Depends(get_db_mysql_local),
+    db_remoto: Session = Depends(get_db_mysql_hostinger)
 ):
     try:
         # Lógica para sincronizar los datos

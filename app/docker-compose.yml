@@ -1,0 +1,20 @@
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"  # Exponer el puerto de la aplicación
+    depends_on:
+      - db  # Asegura que el contenedor de la base de datos se inicie antes que la aplicación
+    environment:
+      MYSQL_HOST: db  # 'db' es el nombre del servicio de MySQL
+
+  db:
+    image: mysql:5.7  # Usa la imagen oficial de MySQL
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword  # Contraseña del usuario root
+      MYSQL_DATABASE: devioz_bd  # Nombre de la base de datos
+      MYSQL_USER: root  # Usuario para acceder a la base de datos
+      MYSQL_PASSWORD: Alonso-123  # Contraseña del usuario
+    ports:
+      - "3306:3306"  # Exponer el puerto 3306 de MySQL

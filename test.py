@@ -5,14 +5,14 @@ from sqlalchemy.orm import Session
 # Agregar la carpeta app al path de importación
 sys.path.append(os.path.join(os.path.dirname(__file__), 'app'))
 
-from database import engine  # Ahora puede importar correctamente
+from database import engine_mysql_local  # Ahora puede importar correctamente
 from models import Categoria  # Asegúrate de que 'Cliente' sea el modelo adecuado
 
 # Función para verificar si hay datos en la tabla
 def verificar_datos_en_tabla():
     try:
         # Crear una sesión
-        session = Session(bind=engine)
+        session = Session(bind=engine_mysql_local)
         
         # Consultar si hay datos en la tabla 'Cliente'
         cliente_count = session.query(Categoria).count()  # Contar los registros en la tabla Cliente
