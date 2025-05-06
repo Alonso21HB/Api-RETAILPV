@@ -18,7 +18,7 @@ import mysql.connector
 # Conexión a MySQL local
 MYSQL_USER_LOCAL = "root"  # O el usuario que uses en tu MySQL
 MYSQL_PASSWORD_LOCAL = "Alonso-123"  # La contraseña del usuario
-MYSQL_HOST_LOCAL = "db"  # Cambia localhost si usas otro host o IP
+MYSQL_HOST_LOCAL = "host.docker.internal"  # Cambia localhost si usas otro host o IP
 MYSQL_PORT_LOCAL = "3306"  # Puerto de MySQL (generalmente es 3306)
 MYSQL_DATABASE_LOCAL = "devioz_bd"  # Nombre de la base de datos
 

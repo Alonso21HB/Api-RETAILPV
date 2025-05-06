@@ -1,20 +1,30 @@
+version: '3.8'
 
 services:
   app:
     build: .
+    container_name: app-container
     ports:
-      - "8000:8000"  # Exponer el puerto de la aplicación
-    depends_on:
-      - db  # Asegura que el contenedor de la base de datos se inicie antes que la aplicación
+      - "8000:8000"  # Mapea el puerto 8000 del contenedor al 8000 de tu máquina local
     environment:
-      MYSQL_HOST: db  # 'db' es el nombre del servicio de MySQL
+      - MYSQL_USER=u777467137_deviozapp
+      - MYSQL_PASSWORD=Deviozapp10+  # Cambia por tus credenciales de MySQL en Hostinger
+      - MYSQL_HOST=auth-db465.hstgr.io  # Hostinger MySQL
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=u777467137_deviozapp  # Nombre de la base de datos
+    networks:
+      - app-network
 
-  db:
-    image: mysql:5.7  # Usa la imagen oficial de MySQL
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword  # Contraseña del usuario root
-      MYSQL_DATABASE: devioz_bd  # Nombre de la base de datos
-      MYSQL_USER: root  # Usuario para acceder a la base de datos
-      MYSQL_PASSWORD: Alonso-123  # Contraseña del usuario
-    ports:
-      - "3306:3306"  # Exponer el puerto 3306 de MySQL
+  # Si en algún futuro quieres crear un contenedor para MySQL en Docker (por ejemplo, para desarrollo), puedes añadirlo:
+  # db:
+  #   image: mysql:5.7
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root_password
+  #   ports:
+  #     - "3306:3306"
+  #   networks:
+  #     - app-network
+
+networks:
+  app-network:
+    driver: bridge
