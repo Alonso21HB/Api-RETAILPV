@@ -8,7 +8,58 @@ from fastapi.encoders import jsonable_encoder
 
 app = FastAPI()
 
-# --- Rutas para obtener datos de SQL Server ---
+# --- Evento para ejecutar la sincronización automáticamente al iniciar la API ---
+@app.on_event("startup")
+async def sincronizar_datos_al_inicio():
+    db_local = next(get_db_mysql_local())
+    db_remoto = next(get_db_mysql_hostinger())
+
+    try:
+        tablas = [
+            {"modelo": models.Cliente, "nombre": "Cliente"},
+            {"modelo": models.Producto, "nombre": "Producto"},
+            {"modelo": models.Sucursal, "nombre": "Sucursal"},
+            {"modelo": models.Pago, "nombre": "Pago"},
+            {"modelo": models.Promocion, "nombre": "Promocion"},
+            {"modelo": models.Proveedor, "nombre": "Proveedor"},
+            {"modelo": models.Tiempo, "nombre": "Tiempo"},
+            {"modelo": models.Venta, "nombre": "HechosVentas"},
+            {"modelo": models.Categoria, "nombre": "Categoria"},
+            {"modelo": models.Empleado, "nombre": "Empleado"}
+        ]
+
+        resultados = {}
+
+        for tabla in tablas:
+            modelo = tabla["modelo"]
+            nombre_tabla = tabla["nombre"]
+
+            # Obtener los datos desde SQL Server
+            datos_locales = db_local.query(modelo).all()
+
+            # Obtener las IDs de los registros existentes en MySQL
+            pk_column = list(modelo.__table__.primary_key.columns)[0]
+            ids_remotos = {getattr(e, pk_column.name) for e in db_remoto.query(pk_column).all()}
+
+            # Filtrar los nuevos registros que no existen en MySQL
+            nuevos = [
+                modelo(**{column.name: getattr(fila, column.name) for column in modelo.__table__.columns})
+                for fila in datos_locales
+                if getattr(fila, pk_column.name) not in ids_remotos
+            ]
+
+            # Si hay registros nuevos, los insertamos en MySQL
+            if nuevos:
+                db_remoto.add_all(nuevos)
+                db_remoto.commit()
+
+            resultados[nombre_tabla] = f"{len(nuevos)} nuevos registros sincronizados."
+
+        print("Sincronización completada:", resultados)
+    except Exception as e:
+        print(f"Error al sincronizar datos: {str(e)}")
+
+# --- Rutas para obtener datos de SQL Server --- 
 
 # Ruta para obtener clientes
 @app.get("/clientes/", response_model=List[schemas.Cliente])
@@ -101,7 +152,7 @@ def get_empleados(db: Session = Depends(get_db_mysql_local)):
         raise HTTPException(status_code=500, detail=f"Error al obtener empleados: {str(e)}")
 
 
-# --- Ruta para sincronizar datos de SQL Server a MySQL ---
+# --- Ruta para sincronizar datos de SQL Server a MySQL --- 
 
 @app.post("/sincronizar")
 def sincronizar_datos(
@@ -109,7 +160,6 @@ def sincronizar_datos(
     db_remoto: Session = Depends(get_db_mysql_hostinger)
 ):
     try:
-        # Lógica para sincronizar los datos
         tablas = [
             {"modelo": models.Cliente, "nombre": "Cliente"},
             {"modelo": models.Producto, "nombre": "Producto"},
